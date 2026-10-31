@@ -145,10 +145,8 @@ catalogue's key: it fills in the archive's hash and address, adds the seal, runs
 and pushes the sealed `index.json` back to `main`. Until then the entry is unsealed and every server
 skips it.
 
-The workflow can also be run by hand (Actions page, "seal", "Run workflow") on `main` or on the
-branch `seal-test` only (the job does not start on any other branch), in three modes. The branch
-`seal-test` exists only for the sealing test on GitHub; when that test is over it is removed from the
-environment's branches and from `seal.yml`:
+The workflow can also be run by hand (Actions page, "seal", "Run workflow") on `main` only
+(the job does not start on any other branch), in three modes:
 
 - `seal`: seal every unsealed entry (the same as after a merge);
 - `add-seals`: add a seal by every key the workflow has to every sealed entry (for a key change);
@@ -163,7 +161,7 @@ address on a sealed entry).
 A run that was cancelled (or failed to push) leaves nothing half done: run the workflow again.
 
 The private keys live in the secrets of the GitHub environment `catalogue-signing`, not in the
-repository's own secrets. The environment allows only the branches `main` and `seal-test`, and only
+repository's own secrets. The environment allows only the branch `main`, and only
 the sealing job names it, so no other job and no other branch can read the keys.
 
 ## Sealed archives never change
@@ -214,7 +212,7 @@ Once, on GitHub, before the first plugin is merged:
 
 1. Settings, Environments: `catalogue-signing`. If the environment already exists (a sealing run
    creates it), open it; otherwise create it. Under deployment branches choose selected branches and
-   set the branch limit to `main` and `seal-test` (`seal-test` is removed after the sealing test).
+   set the branch limit to `main`.
 2. In that environment add the secret `CATALOGUE_SIGNING_KEY_A` (the private key file's content).
    Do not add the keys as repository secrets.
 3. Settings, Branches: protect `main` as in "Branch protection".

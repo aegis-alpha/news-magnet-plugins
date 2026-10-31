@@ -59,12 +59,8 @@ def test_the_signing_secrets_belong_to_an_environment_named_by_the_sealing_job_o
         assert "environment:" not in without_comments(text)
 
 
-def test_the_hand_run_and_the_job_are_limited_to_main_and_the_test_branch():
-    assert re.search(
-        r"^    if: github\.ref == 'refs/heads/main' \|\| github\.ref == 'refs/heads/seal-test'$",
-        SEAL,
-        re.M,
-    )
+def test_the_hand_run_and_the_job_are_limited_to_main():
+    assert re.search(r"^    if: github\.ref == 'refs/heads/main'$", SEAL, re.M)
 
 
 def test_the_seal_checks_out_and_pushes_the_branch_it_ran_on():

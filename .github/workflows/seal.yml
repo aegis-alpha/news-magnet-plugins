@@ -1,16 +1,13 @@
 # Seals accepted plugins with the catalogue's key and pushes the sealed index.json back to the
 # branch it ran on.
 # - On a push to main that touches index.json or plugins/: mode seal (every unsealed entry).
-# - By hand (Actions page, "Run workflow"), on main or on the branch seal-test only: mode seal,
+# - By hand (Actions page, "Run workflow"), on main only: mode seal,
 #   add-seals (a seal by every key given added to every sealed entry, for a key change) or
 #   drop-seals (one fingerprint's seals removed). Any other branch: the job does not start.
 # The private keys live only in the repository secrets CATALOGUE_SIGNING_KEY_A and
 # CATALOGUE_SIGNING_KEY_B (one at rest, both during a key change), joined into
 # CATALOGUE_SIGNING_KEYS in the sealing step alone. They are stored in the GitHub environment
-# `catalogue-signing`, whose deployment branches are main and seal-test; only this job names it.
-# The branch seal-test exists only for the sealing test on GitHub (piece 4): when that test is
-# over, seal-test is removed from the environment's branches and from the two `if:`/comment lines
-# in this file.
+# `catalogue-signing`, whose only deployment branch is main; only this job names it.
 name: seal
 
 on:
@@ -41,7 +38,7 @@ concurrency:
 
 jobs:
   seal:
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/seal-test'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: catalogue-signing
     steps:
