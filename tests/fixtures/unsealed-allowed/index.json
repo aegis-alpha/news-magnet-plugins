@@ -1,0 +1,23 @@
+{
+  "format_version": 1,
+  "entries": [
+    {
+      "kind": "sample_feed",
+      "title": {
+        "ru": "Пример ленты",
+        "en": "Sample feed"
+      },
+      "description": {
+        "ru": "Пример плагина для проверок каталога"
+      },
+      "version": "1.0.0",
+      "service_min": "release-2026-10-01",
+      "service_max": null,
+      "archive_url": "",
+      "archive_sha256": "",
+      "seals": [],
+      "needs_key": false,
+      "paid": false
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "format_version": 1,
+  "entries": [
+    {
+      "kind": "sample_feed",
+      "title": {
+        "ru": "Пример ленты",
+        "en": "Sample feed"
+      },
+      "description": {
+        "ru": "Пример плагина для проверок каталога"
+      },
+      "version": "1.0.0",
+      "service_min": "release-2026-10-01",
+      "service_max": null,
+      "archive_url": "https://raw.githubusercontent.com/owner/repo/main/plugins/sample_feed/sample_feed-1.0.0.zip",
+      "archive_sha256": "81606e772ff508c551a45b0dc0debdfc43a2b47a75a3dc4ace95b863567ca63b",
+      "seals": [
+        {
+          "key": "bb835659f09ec6fb",
+          "signature": "wG+vmKrmje8BPdFY4bgZ6wzrXRjn+CsIujNBB92CGY0f8u9K+XeqH+mO7nGTG73QvfxmEj3Fsb6VP64nKTaeBw=="
+        }
+      ],
+      "needs_key": false,
+      "paid": false
+    }
+  ]
+}

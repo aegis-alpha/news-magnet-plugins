@@ -1,0 +1,112 @@
+{
+  "good-two-seals": {
+    "exit": 0,
+    "field": null
+  },
+  "unknown-entry-field": {
+    "exit": 1,
+    "field": "entries[0].licence"
+  },
+  "unknown-top-field": {
+    "exit": 1,
+    "field": "generated"
+  },
+  "missing-field": {
+    "exit": 1,
+    "field": "entries[0].needs_key"
+  },
+  "bad-version": {
+    "exit": 1,
+    "field": "entries[0].version"
+  },
+  "bad-language": {
+    "exit": 1,
+    "field": "entries[0].title.pt-BR"
+  },
+  "bad-seal-item": {
+    "exit": 1,
+    "field": "entries[0].seals[1]"
+  },
+  "unknown-key-seal": {
+    "exit": 1,
+    "field": "entries[0].seals[1]"
+  },
+  "wrong-seal": {
+    "exit": 1,
+    "field": "entries[0].seals[0]"
+  },
+  "hash-changed": {
+    "exit": 1,
+    "field": "entries[0].archive_sha256"
+  },
+  "duplicate": {
+    "exit": 1,
+    "field": "entries[1]"
+  },
+  "half-sealed": {
+    "exit": 1,
+    "field": "entries[0].archive_sha256"
+  },
+  "http-url": {
+    "exit": 1,
+    "field": "entries[0].archive_url"
+  },
+  "range-reversed": {
+    "exit": 1,
+    "field": "entries[0].service_min"
+  },
+  "format-version-2": {
+    "exit": 1,
+    "field": "format_version"
+  },
+  "unsealed": {
+    "exit": 1,
+    "field": "entries[0]"
+  },
+  "unsealed-allowed": {
+    "exit": 0,
+    "field": null,
+    "allow_unsealed": true
+  },
+  "unsealed-manifest-paid": {
+    "exit": 1,
+    "field": "entries[0].manifest.paid",
+    "allow_unsealed": true
+  },
+  "manifest-kind": {
+    "exit": 1,
+    "field": "entries[0].manifest.kind"
+  },
+  "manifest-version": {
+    "exit": 1,
+    "field": "entries[0].manifest.version"
+  },
+  "manifest-service-min": {
+    "exit": 1,
+    "field": "entries[0].manifest.service_min"
+  },
+  "manifest-service-max": {
+    "exit": 1,
+    "field": "entries[0].manifest.service_max"
+  },
+  "manifest-needs-key": {
+    "exit": 1,
+    "field": "entries[0].manifest.needs_key"
+  },
+  "manifest-paid": {
+    "exit": 1,
+    "field": "entries[0].manifest.paid"
+  },
+  "missing-archive": {
+    "exit": 1,
+    "field": "entries[0].archive"
+  },
+  "small-order-key": {
+    "exit": 1,
+    "field": "keys[3]"
+  },
+  "unsafe-symlink-member": {
+    "exit": 1,
+    "field": "entries[0].archive"
+  }
+}

@@ -1,0 +1,70 @@
+# Seals accepted plugins with the catalogue's key and pushes the sealed index.json back to the
+# branch it ran on.
+# - On a push to main that touches index.json or plugins/: mode seal (every unsealed entry).
+# - By hand (Actions page, "Run workflow"), on main or on the branch seal-test only: mode seal,
+#   add-seals (a seal by every key given added to every sealed entry, for a key change) or
+#   drop-seals (one fingerprint's seals removed). Any other branch: the job does not start.
+# The private keys live only in the repository secrets CATALOGUE_SIGNING_KEY_A and
+# CATALOGUE_SIGNING_KEY_B (one at rest, both during a key change), joined into
+# CATALOGUE_SIGNING_KEYS in the sealing step alone. They are stored in the GitHub environment
+# `catalogue-signing`, whose deployment branches are main and seal-test; only this job names it.
+# The branch seal-test exists only for the sealing test on GitHub (piece 4): when that test is
+# over, seal-test is removed from the environment's branches and from the two `if:`/comment lines
+# in this file.
+name: seal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.json
+      - "plugins/**"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "seal, add-seals or drop-seals"
+        type: choice
+        options: [seal, add-seals, drop-seals]
+        default: seal
+      fingerprint:
+        description: "drop-seals only: the fingerprint whose seals are removed"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seal
+  cancel-in-progress: false
+
+jobs:
+  seal:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/seal-test'
+    runs-on: ubuntu-latest
+    environment: catalogue-signing
+    steps:
+      - name: Check out the branch head
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Install the tool's library
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Seal and push
+        env:
+          CATALOGUE_SIGNING_KEYS: |
+            ${{ secrets.CATALOGUE_SIGNING_KEY_A }}
+            ${{ secrets.CATALOGUE_SIGNING_KEY_B }}
+          PYTHON: python
+          MODE: ${{ inputs.mode || 'seal' }}
+          FINGERPRINT: ${{ inputs.fingerprint }}
+          BRANCH: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+          URL_BASE: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}
+        run: bash tools/seal-push.sh --branch "$BRANCH" --mode "$MODE" --url-base "$URL_BASE" --repository "$REPOSITORY" --fingerprint "$FINGERPRINT"

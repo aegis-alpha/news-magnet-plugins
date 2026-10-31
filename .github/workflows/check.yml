@@ -1,0 +1,42 @@
+# The catalogue's own check: on every pull request and every push to main. No secrets, and
+# nothing here is trusted to admit a plugin.
+# - On a pull request it runs the tools' tests. They run the pull request's own code, so they only
+#   say whether a change to the tools works; they decide nothing about a plugin. The admission
+#   checks (the guard and the strict check of the index) run in guard.yml from the base branch's
+#   code.
+# - On a push to main it runs the strict check of the index and the archives (unsealed entries
+#   allowed: after a merge an entry stays unsealed until the seal workflow commits), from the
+#   branch's own code. Other branches reach main only through a pull request, judged by guard.yml.
+name: check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Install the tools' libraries
+        run: python -m pip install cryptography==50.0.2 pytest==9.1.1
+      - name: Check the index and the archives
+        if: github.event_name == 'push'
+        env:
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: python tools/catalogue-sign.py check index.json --root . --keys keys/catalogue_key.pub --allow-unsealed --repository "$REPOSITORY" --branch "$BRANCH"
+      - name: Test the tools
+        if: github.event_name == 'pull_request'
+        run: python -m pytest -q -p no:cacheprovider tests

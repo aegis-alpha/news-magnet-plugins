@@ -1,0 +1,59 @@
+{
+  "format_version": 1,
+  "entries": [
+    {
+      "kind": "sample_feed",
+      "title": {
+        "ru": "Пример ленты",
+        "en": "Sample feed"
+      },
+      "description": {
+        "ru": "Пример плагина для проверок каталога"
+      },
+      "version": "1.0.0",
+      "service_min": "release-2026-10-01",
+      "service_max": null,
+      "archive_url": "https://raw.githubusercontent.com/owner/repo/main/plugins/sample_feed/sample_feed-1.0.0.zip",
+      "archive_sha256": "7ad4e582a82158c2ef60cb1aa96303a847de56360862bed605e7d9b74e821bd1",
+      "seals": [
+        {
+          "key": "bb835659f09ec6fb",
+          "signature": "nhB4WV+vpHwzBMKsPBx2BkDD0A8LlsaAwGZgeKUSGxeABFVJvj6dv0BMSwcDY/VIkM3z/vQBUfnw9VS7LKxhDw=="
+        }
+      ],
+      "needs_key": false,
+      "paid": false
+    },
+    {
+      "kind": "sample_wire",
+      "title": {
+        "ru": "Пример ленты новостей",
+        "en": "Sample wire"
+      },
+      "description": {
+        "ru": "Пример плагина для проверок каталога"
+      },
+      "version": "2.0.0",
+      "service_min": "release-2026-10-01",
+      "service_max": "release-2027-06-30",
+      "archive_url": "https://raw.githubusercontent.com/owner/repo/main/plugins/sample_wire/sample_wire-2.0.0.zip",
+      "archive_sha256": "e8e43c5ee814d4af5e6c56524e5488302631873c908bfd6971a3a5e0ebb6e9a9",
+      "seals": [
+        {
+          "key": "bb835659f09ec6fb",
+          "signature": "hACAFCWC5D0YDDhg8mZhoiaxTW98iUU5OYEh+de/RJsQZ0rHN6zhFSMYF1cACTmgrHjgalhfmJOM6BCwkk/ABw=="
+        },
+        {
+          "key": "a825f66480cce640",
+          "signature": "aBSnPc/JeXqL4vbtAtd3Z7qT9WSpqEr/VqQLvCmmQevlswEJ3k8PxpphMmkzZqVZZlU0NxT0+EzmNQ04/vqrDA=="
+        }
+      ],
+      "needs_key": true,
+      "paid": false,
+      "notes": {
+        "ru": "Только для личного пользования",
+        "en": "For personal use only"
+      }
+    }
+  ]
+}

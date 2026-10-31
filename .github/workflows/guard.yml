@@ -1,0 +1,52 @@
+# The admission check of a pull request, run from the BASE branch's code.
+# It runs on `pull_request_target`, so GitHub takes this workflow file and everything checked out
+# in its workspace from the base branch: a pull request cannot change the guard, the tool or this
+# file and pass. The pull request's content is read only as data:
+# - its merge result with the base is built by git alone (`git merge-tree`, no files written, no
+#   merge driver, a conflict fails the check);
+# - the guard compares that result with the base (tools/base-guard.py);
+# - `index.json` and `plugins/` of that result are copied out with `git archive` into a separate
+#   folder, and the strict check of the base's tool reads that folder.
+# Nothing from the pull request is run, imported or installed. No secret is referenced anywhere in
+# this file, and the token can only read.
+name: guard
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the base branch
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Install the tool's library
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Fetch the pull request as data
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git fetch --no-tags origin "refs/pull/$PR_NUMBER/head"
+          merged=$(git merge-tree --write-tree HEAD FETCH_HEAD)
+          echo "MERGED=${merged%%$'\n'*}" >> "$GITHUB_ENV"
+      - name: Compare with the base branch
+        run: python tools/base-guard.py --base HEAD --head "$MERGED"
+      - name: Check the index and the archives
+        shell: bash
+        env:
+          REPOSITORY: ${{ github.repository }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: |
+          mkdir "$RUNNER_TEMP/head"
+          git archive "$MERGED" index.json plugins | tar -x --no-same-owner -C "$RUNNER_TEMP/head"
+          python tools/catalogue-sign.py check "$RUNNER_TEMP/head/index.json" --root "$RUNNER_TEMP/head" --keys keys/catalogue_key.pub --allow-unsealed --repository "$REPOSITORY" --branch "$BASE_BRANCH"
