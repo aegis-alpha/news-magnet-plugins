@@ -1,2 +1,3 @@
 # The catalogue's public signing keys: one line per key, `ed25519 <base64 of the raw 32-byte key>`.
 # Lines starting with # and blank lines are ignored. See keys/README.md.
+ed25519 QBN5S7FpcHu2vmTr5FQ25UCL5Hk9hFMUC94q1xxRSV0=
